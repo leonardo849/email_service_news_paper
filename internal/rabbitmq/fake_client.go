@@ -2,7 +2,7 @@ package rabbitmq
 
 import (
 	"email-service/internal/dto"
-	"email-service/internal/logger"
+	"email-service/pkg/logger"
 	"strings"
 	"time"
 )
