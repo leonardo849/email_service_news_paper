@@ -2,7 +2,7 @@ package main
 
 import (
 	"email-service/config"
-	"email-service/pkg/logger"
+	"email-service/internal/logger"
 	"email-service/internal/rabbitmq"
 	"log"
 

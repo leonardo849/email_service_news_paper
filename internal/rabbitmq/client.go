@@ -2,7 +2,7 @@ package rabbitmq
 
 import (
 	"email-service/internal/dto"
-	"email-service/pkg/logger"
+	"email-service/internal/logger"
 	"encoding/json"
 	"fmt"
 	"net/smtp"
