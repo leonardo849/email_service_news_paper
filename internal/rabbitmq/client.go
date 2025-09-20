@@ -15,25 +15,33 @@ import (
 const smtpHost string = "smtp.gmail.com"
 const smtpPort string = "587"
 
-func (c *client) sendEmail(input dto.EmailDTO) error {
-	from := os.Getenv("SERVICE_EMAIL")
-	password := os.Getenv("SERVICE_PASSWORD")
-	if from == "" || password == "" {
+
+func (c * client) loadEnvVars() error {
+	logger.ZapLogger.Info("loading env vars")
+	c.from = os.Getenv("SERVICE_EMAIL")
+	c.password = os.Getenv("SERVICE_PASSWORD")
+	if c.from == "" || c.password == "" {
 		err := fmt.Errorf("from email or password is empty")
 		logger.ZapLogger.Fatal(err.Error(), zap.String("function", "c.sendEmail"))
 		return err
-	}
+	} 
+	return nil
+}
+
+func (c *client) sendEmail(input dto.EmailDTO) error {
+	
+	
 	toHeader := strings.Join(input.To, ",")
 
 
 	message := []byte(
-		"From: " + from + "\r\n" +
+		"From: " + c.from + "\r\n" +
 		"To: " + toHeader + "\r\n" +
 		"Subject: " + input.Subject + "\r\n" + "\r\n" + input.Text + "\r\n",
 	)
 
-	auth := smtp.PlainAuth("", from, password, smtpHost)
-	if err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, input.To, message); err != nil {
+	auth := smtp.PlainAuth("", c.from, c.password, smtpHost)
+	if err := smtp.SendMail(smtpHost+":"+smtpPort, auth, c.from, input.To, message); err != nil {
 		logger.ZapLogger.Error(err.Error(), zap.String("function", "c.sendEmail"))
 		return err
 	}

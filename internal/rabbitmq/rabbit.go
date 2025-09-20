@@ -20,11 +20,14 @@ const key = "email"
 type clientI interface {
 	sendEmail(input dto.EmailDTO) error
 	consumerEmail()
+	loadEnvVars() error
 }
 
 type client struct {
 	conn *amqp.Connection
 	ch *amqp.Channel
+	from string
+	password string
 }
 
 
@@ -90,7 +93,9 @@ func ConnectToRabbitMQ() error {
 		conn: conn,
 		ch:   ch,
 	}
-
+	if err := rabbitClient.loadEnvVars(); err != nil {
+		
+	}
 	startConsumer()
 	return nil
 }

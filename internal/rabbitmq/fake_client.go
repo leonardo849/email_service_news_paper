@@ -10,6 +10,11 @@ import (
 type fakeClient struct {
 }
 
+func (c *fakeClient) loadEnvVars()  error {
+	logger.ZapLogger.Info("[fake] loading env vars")
+	return  nil
+}
+
 func (c *fakeClient) sendEmail(input dto.EmailDTO) error {
 	logger.ZapLogger.Info("[fake] " + "sending email to " + strings.Join(input.To, "") + " subject " + input.Subject)
 	return  nil
@@ -32,7 +37,7 @@ func (c *fakeClient) consumerEmail() {
 				Subject: "test",
 				Text:    "test message",
 			}
-			time.Sleep(time.Second * 2)
+			time.Sleep(time.Second * 10)
 			
 		} 
 	}()
