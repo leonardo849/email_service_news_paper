@@ -14,7 +14,7 @@ import (
 
 const smtpHost string = "smtp.gmail.com"
 const smtpPort string = "587"
-
+var auth smtp.Auth
 
 func (c * client) loadEnvVars() error {
 	logger.ZapLogger.Info("loading env vars")
@@ -25,6 +25,7 @@ func (c * client) loadEnvVars() error {
 		logger.ZapLogger.Fatal(err.Error(), zap.String("function", "c.sendEmail"))
 		return err
 	} 
+	auth = smtp.PlainAuth("", c.from, c.password, smtpHost)
 	return nil
 }
 
@@ -40,7 +41,7 @@ func (c *client) sendEmail(input dto.EmailDTO) error {
 		"Subject: " + input.Subject + "\r\n" + "\r\n" + input.Text + "\r\n",
 	)
 
-	auth := smtp.PlainAuth("", c.from, c.password, smtpHost)
+	
 	if err := smtp.SendMail(smtpHost+":"+smtpPort, auth, c.from, input.To, message); err != nil {
 		logger.ZapLogger.Error(err.Error(), zap.String("function", "c.sendEmail"))
 		return err
