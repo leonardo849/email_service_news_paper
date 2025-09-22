@@ -4,6 +4,7 @@ import (
 	"email-service/internal/dto"
 	"email-service/internal/logger"
 	"fmt"
+	"net/smtp"
 	"os"
 	"strconv"
 	"time"
@@ -28,6 +29,9 @@ type client struct {
 	ch *amqp.Channel
 	from string
 	password string
+	smtpPort string
+	smtpHost string
+	auth smtp.Auth
 }
 
 
@@ -92,6 +96,8 @@ func ConnectToRabbitMQ() error {
 	rabbitClient = &client{
 		conn: conn,
 		ch:   ch,
+		smtpHost: "smtp.gmail.com",
+		smtpPort: "587",
 	}
 	if err := rabbitClient.loadEnvVars(); err != nil {
 		

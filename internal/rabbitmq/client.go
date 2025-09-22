@@ -12,9 +12,9 @@ import (
 	"go.uber.org/zap"
 )
 
-const smtpHost string = "smtp.gmail.com"
-const smtpPort string = "587"
-var auth smtp.Auth
+// const smtpHost string = "smtp.gmail.com"
+// const smtpPort string = "587"
+
 
 func (c * client) loadEnvVars() error {
 	logger.ZapLogger.Info("loading env vars")
@@ -25,7 +25,8 @@ func (c * client) loadEnvVars() error {
 		logger.ZapLogger.Fatal(err.Error(), zap.String("function", "c.sendEmail"))
 		return err
 	} 
-	auth = smtp.PlainAuth("", c.from, c.password, smtpHost)
+	c.auth = smtp.PlainAuth("", c.from, c.password, c.smtpHost)
+	logger.ZapLogger.Info("env vars are ready")
 	return nil
 }
 
@@ -42,7 +43,7 @@ func (c *client) sendEmail(input dto.EmailDTO) error {
 	)
 
 	
-	if err := smtp.SendMail(smtpHost+":"+smtpPort, auth, c.from, input.To, message); err != nil {
+	if err := smtp.SendMail(c.smtpHost+":"+c.smtpPort, c.auth, c.from, input.To, message); err != nil {
 		logger.ZapLogger.Error(err.Error(), zap.String("function", "c.sendEmail"))
 		return err
 	}
