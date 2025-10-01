@@ -53,7 +53,7 @@ func (c *client) sendEmail(input dto.EmailDTO) error {
 
 func (c *client) consumerEmail() {
 	const exchangeName = "email_direct"
-	const queueName = "email_service_queue"
+	// const queueName = "email_service_queue"
 
 	if err := c.ch.ExchangeDeclare(
 		exchangeName,
@@ -68,7 +68,7 @@ func (c *client) consumerEmail() {
 	}
 
 	q, err := c.ch.QueueDeclare(
-		queueName,
+		"",
 		true,
 		false,
 		false,
